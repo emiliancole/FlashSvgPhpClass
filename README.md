@@ -1,4 +1,4 @@
-# FlashSvgPhpClass
+# FlashSvgPhpClass (v07)
 
 ## FlashSvgMath.class.php
 - Includes all math functions used by FlashSvg.class.07.php
