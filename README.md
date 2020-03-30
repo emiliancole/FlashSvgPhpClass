@@ -8,5 +8,5 @@
 - Includes FlashSvgMath.class.php
 
 ## FlashSvgMilitary.class.php
-- Includes all 3d svg static functions based on the 3d military view.
+- Includes all 3d svg static functions based on the 3d military projection.
 - Includes FlashSvg.07.class.php
