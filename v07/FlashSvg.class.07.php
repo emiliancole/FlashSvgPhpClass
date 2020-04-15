@@ -376,16 +376,16 @@ style='$style' />";
 return array($mx,$my,$rx,$ry,$x,$y);
 }
 
+// gClose()
+public static function gClose() {
+echo "</g>";
+}
+
 // gOpen($id, $transform, $style)
 //transform = 'rotate(cx cy angle) translate(dx dy) scale(x y)' 
 public static function gOpen($id='g01', $transform='rotate(0 0 0)', 
 	$style='') {
 echo "<g id='$id' transform='$transform' style='$style' >";
-}
-
-// gClose()
-public static function gClose() {
-echo "</g>";
 }
 
 // gridH($w, $dy, $rows, $style)
@@ -458,7 +458,6 @@ return array($x1,$y1,$x2,$y2,$x3,$y3,$x4,$y4,$x5,$y5,$x6,$y6);
 public static function hexagonRad($cx=100, $cy=100, $r=50, $startRad=0,
 $style='stroke:black;stroke-width:1;fill:none;') { 
 $alpha=2*M_PI/6;
-//circle($cx,$cy,$r);
 $arr1=fm::returnCartesianRad($r,$startRad);
 $arr2=fm::returnCartesianRad($r,$startRad+$alpha);
 $arr3=fm::returnCartesianRad($r,$startRad+2*$alpha);
@@ -715,7 +714,6 @@ return array($x1,$y1,$x2,$y2,$x3,$y3,$x4,$y4,$x5,$y5,$x6,$y6,$x7,$y7,$x8,$y8);
 public static function octagonDeg($cx=100, $cy=100, $r=50, $startDeg=0,
 $style='stroke:black;stroke-width:1;fill:none') { 
 $alpha=2*M_PI/8; $start=deg2rad($startDeg);
-//circle($cx,$cy,$r);
 $arr1=fm::returnCartesianDeg($r,$start);
 $arr2=fm::returnCartesianDeg($r,$start+$alpha);
 $arr3=fm::returnCartesianDeg($r,$start+2*$alpha);
@@ -737,12 +735,6 @@ style='$style' />";
 return array($x1,$y1,$x2,$y2,$x3,$y3,$x4,$y4,$x5,$y5,$x6,$y6,$x7,$y7,$x8,$y8);
 }
 
-// patternOpen($id, $w, $h, $patternUnits)
-public static function patternOpen($id='pattern01', $w=10, $h=10, $patternUnits='userSpaceOnUse') {
-echo "<pattern id=$id width=$w height=$h patternUnits=$patternUnits >";
-return array($id,$w,$h,$patternUnits);
-}
-
 
 // path($d, $style)
 public static function path($d='M100,100 200,200', 
@@ -754,16 +746,14 @@ return $d;
 // pathId($id, $d, $style)
 public static function pathId($id='path01', $d='M10,110 120,120', 
 $style='stroke:black;stroke-width:1;fill:none;') {
-echo "<path id=$id d='$d' style='$style' />";
+echo "<path id='$id' d='$d' style='$style' />";
 return array($id,$d);
 }
-
 
 // patternClose()
 public static function patternClose() {
 echo "</pattern>";
 }
-
 
 // patternHatch($id, $w, $h, $patternTransform, $patternUnits)
 public static function patternHatch($id='diagonalHatch', $w=10, $h=10, $patternTransform='rotate(45)', 
@@ -774,11 +764,17 @@ echo "</pattern>";
 return array($id,$w,$h,$patternTransform,$patternUnits);
 }
 
+// patternOpen($id, $xStart, $yStart, $w, $h, $patternUnits)
+public static function patternOpen($id='pattern01', $xStart=0, $yStart=0, 
+$w='10%', $h='10%', $patternUnits='userSpaceOnUse') {
+echo "<pattern id='$id' x=$xStart y=$yStart width='$w' height='$h' patternUnits='$patternUnits' >";
+return array($id,$xStart,$yStart,$w,$h,$patternUnits);
+}
+
 // pentagonDeg($cx, $cy, $r, $start, $style)
 public static function pentagonDeg($cx=100, $cy=100, $r=50, $startDeg=0,
 $style='stroke:black;stroke-width:1;fill:none;') { 
 $alpha=2*M_PI/5; $start=deg2rad($startDeg);
-//circle($cx,$cy,$r);
 $arr1=fm::returnCartesianDeg($r,$start);
 $arr2=fm::returnCartesianDeg($r,$start+$alpha);
 $arr3=fm::returnCartesianDeg($r,$start+2*$alpha);
@@ -1138,7 +1134,13 @@ public static function svgClose() {
 echo "</svg>";
 }
 
+// symbolClose()
+public static function symbolClose() {
+echo "</symbol>";
+}
+
 // symbolOpen($id)
+//Must be closed with symbolClose() and contain one or more elements.
 public static function symbolOpen($id='sym01') {
 echo "<symbol id='$id' >";
 }
@@ -1148,48 +1150,64 @@ public static function symbolViewboxOpen($id='sym01', $preserveAspectRatio='yes'
 echo "<symbol id=$id preserveAspectRatio=$preserveAspectRatio viewBox=$viewBox >";
 }
 
-// symbolClose()
-public static function symbolClose() {
-echo "</symbol>";
-}
-
-// tagOpen($tag)
-public static function tagOpen($tag) {
-echo "<$tag>";
-}
-
 // tagClose($tag)
 public static function tagClose($tag) {
 echo "</$tag>";
 }
 
-
-// textOpen($x, $y, $string, $style,)
-public static function textOpen($x=100, $y=100, $string='aaa', 
-$style='fill:black;font-family:Verdana;font-size:14;') {
-echo "<text x='$x' y='$y' style='$style' >$string";
-}
-
-// tspan($string, $style)
-public static function tspan($string='string', 
-$style='fill:black;font-family:Verdana;font-size:14;') {
-echo "<tspan style='$style' >$string</tspan>";
+// tagOpen($tag)
+//Must be closed with tagClose() and contain one or more elements.
+public static function tagOpen($tag) {
+echo "<$tag>";
 }
 
 // text($x, $y, $string, $style)
+//(x,y) = bottom-left string position
 public static function text($x=100, $y=100, $string='string', 
-$style='fill:black;font-family:Georgia;font-size:14') {
+$style='fill:black;font-family:Verdana;font-size:14') {
 echo "<text x='$x' y='$y' style='$style' >$string</text>";
-return array($x,$y);
+return array($x,$y,$string);
 }
 
-// textBox($x, $y, $w, $h, $r, $string, $style)
-public static function textBox($x=100, $y=100, $w=150, $h=50, $r=10, $string='string',
-$style="stroke:black;stroke-width:1;fill:none;") { $ry=$rx;
-echo "<rect x='$x' y='$y' width='$w' height='$h' rx='$r' ry='$r' 
-style='$style' />";
-fs::text($x+$w/2, $y+$h/2, $style, $string);
-return array($x,$y,$w,$h,$r);
+// textBox($x, $y, $w, $h, $r, $string, $stringStyle, $boxStyle)
+public static function textBox($x=100, $y=100, $w=100, $h=50, $r=0, $string='string',
+$stringStyle='fill:black;font-family:Verdana;font-size:14', 
+$boxStyle='stroke:black;stroke-width:1;fill:none;') { 
+$rx=$r; $ry=$rx;
+fs::rectRounded($x, $y, $w, $h, $rx, $ry, $boxStyle);
+fs::text($x+$w/3, $y+$h/2, $string, $stringStyle);
+return array($x,$y,$w,$h,$r,$string);
+}
+
+// textBoxString($x, $y, $w, $h, $r, $string, $stringStyle, $boxStyle)
+public static function textBoxString($x=100, $y=100, $w=100, $h=50, $r=0, 
+$string='string', $stringStyle='fill:black;font-family:Verdana;font-size:14', 
+$boxStyle='stroke:black;stroke-width:1;fill:none;') { 
+$rx=$r; $ry=$rx; $sl=strlen($string)*7;
+$xs=$x+$w/2-$sl/2; $ys=$y+$h/2+5;
+fs::rectRounded($x, $y, $w, $h, $rx, $ry, $boxStyle);
+fs::text($xs, $ys, $string, $stringStyle);
+return array($x,$y,$w,$h,$r,$string);
+}
+
+// textClose()
+public static function textClose() {
+echo "</text>";
+}
+
+// textOpen($x, $y, $string, $style)
+public static function textOpen($x=100, $y=100, $string='', 
+$style='fill:black;font-family:Verdana;font-size:14;') {
+echo "<text x='$x' y='$y' style='$style' >$string";
+return array($x,$y,$string);
+}
+
+// textPath($href, $string, $style)
+//href = #id reference given in pathId()
+public static function textPath($href='#path01', $string='string', 
+$style='fill:black;font-family:Georgia;font-size:14') {
+echo "<textPath href='$href' style='$style' >$string</textPath>";
+return array($href,$string);
 }
 
 // title($string, $style)
@@ -1238,10 +1256,24 @@ style='$style' />";
 return array($x1,$y1,$x2,$y2,$x3,$y3);
 }
 
-// useSymbol($x, $y, $w, $h, $href)
-public static function useSymbol($x=100, $y=100, $w=500, $h=500, $href='#sym01') {
-echo "<use x=$x y=$y width=$w height=$h href='$href' />";
-return array($x, $y, $w, $h, $href);
+// tspan($x, $y, $dx, $dy, $string, $style)
+//must be inside a text element
+//(x,y) = text position relative to the text baseline element (x,y)
+//(dx,dy) = shifts the text (x,y) position from the previous text element
+public static function tspan($x=100, $y=100, $dx=0, $dy=10, $string='line1', 
+$style='fill:black;font-family:Verdana;font-size:14;') {
+echo "<tspan x=$x y=$y dx=$dx dy=$dy style='$style' >$string</tspan>";
+return $string;
+}
+
+
+// useSymbol($href, $x, $y, $style)
+//href = #id reference given in symbolOpen($id)
+//(x,y) = symbol position relative to its definition
+public static function useSymbol($href='#sym01', $x=100, $y=100, 
+$style='opacity:1;') {
+echo "<use href='$href' x='$x' y='$y' style='$style' />";
+return array($href, $x, $y);
 }
 
 } 
